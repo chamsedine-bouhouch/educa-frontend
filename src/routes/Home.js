@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import TeacherList from '../components/TeacherList';
 import { faker } from '@faker-js/faker';
+import AddTeacherForm from '../components/AddTeacherForm';
 
 const Home = () => {
     const [teachers, setTeachers] = useState([]);
@@ -11,9 +12,9 @@ const Home = () => {
     }, []);
 
     return (
-        <div className='bg-gray-100 px-16 py-8 h-full'>
-            <div className='text-2xl mb-4'>Teachers List</div>
-
+        <div className='bg-gray-100 md:px-16 md:py-4 px-8 h-full'>
+            <AddTeacherForm />
+            <div className='text-2xl mt-8 mb-4'>Teachers List</div>
             <TeacherList teachers={teachers} />
         </div>
     );
