@@ -33,8 +33,7 @@ function generateTeachers(num) {
 }
 const fetchTeachers = async () => {
     // Placeholder for API call
-    console.log(generateTeachers(500))
-    return generateTeachers(500)
+    return generateTeachers(20)
 };
 
 export default Home;
