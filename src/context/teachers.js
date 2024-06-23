@@ -6,7 +6,7 @@ const TeacherContext = createContext();
 const TeacherProvider = ({ children }) => {
     const [teachers, setTeachers] = useState([]);
     const [teacher, setTeacher] = useState(null);
-    const [students, setStudents] = useState([]);
+    const [student, setStudent] = useState(null);
     const [error, setError] = useState(null);
     //  fetch all
     const fetchTeachers = useCallback(async () => {
@@ -23,22 +23,13 @@ const TeacherProvider = ({ children }) => {
         try {
             const res = await api.get(`/teachers/${id}`);
             setTeacher(res.data);
-            await findStudentsByTeacher(id);
         } catch (err) {
             setError('Failed to fetch teacher details.');
             throw err;
         }
     }, []);
 
-    const findStudentsByTeacher = useCallback(async (id) => {
-        try {
-            const res = await api.get(`/students/teacher/${id}`);
-            setStudents(res.data);
-        } catch (err) {
-            setError('Failed to fetch students.');
-            throw err;
-        }
-    }, []);
+
 
     const addTeacher = useCallback(async (newTeacher) => {
         try {
@@ -59,8 +50,41 @@ const TeacherProvider = ({ children }) => {
             throw err;
         }
     }, [fetchTeacher]);
+    const fetchStudent = useCallback(async (id) => {
+        try {
+            const res = await api.get(`/students/${id}`);
+            console.log(res)
+            setStudent(res.data)
+        } catch (err) {
+            setError('Failed to fetch student details.');
+            throw err;
+        }
+    }, []);
 
-    const store = { teacher, teachers, students, error, fetchTeacher, fetchTeachers, addTeacher, assignStudent };
+    // add student
+    const addAssignment = useCallback(async (newAssignment) => {
+        try {
+            await api.post('/assignments', newAssignment);
+            await fetchStudent(newAssignment.studentIds[0]);
+        } catch (err) {
+            setError('Failed to add student.');
+            throw err;
+        }
+    }, [fetchStudent]);
+
+
+    const store = {
+        teacher,
+        teachers,
+        student,
+        error,
+        fetchTeacher,
+        fetchTeachers,
+        addTeacher,
+        assignStudent,
+        fetchStudent,
+        addAssignment
+    };
 
     return (
         <TeacherContext.Provider value={store}>

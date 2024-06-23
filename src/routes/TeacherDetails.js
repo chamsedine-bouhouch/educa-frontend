@@ -7,7 +7,7 @@ import TeacherContext from '../context/teachers';
 
 const TeacherDetails = () => {
     const { id } = useParams();
-    const { teacher, students, fetchTeacher, error } = useContext(TeacherContext);
+    const { teacher, fetchTeacher, error } = useContext(TeacherContext);
     const [localError, setLocalError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showAddStudentForm, setShowAddStudentForm] = useState(false)
@@ -62,9 +62,7 @@ const TeacherDetails = () => {
             </button>
 
             {showAddStudentForm && <AddStudentForm teacherId={teacher.id} />}
-            <div className='text-2xl mt-8 mb-4'>Students List</div>
-            <StudentList students={students} />
-
+            {teacher?.students.length > 0 && <StudentList students={teacher.students} />}
             <Link to="/" className="text-blue-500 hover:underline mt-4 block">
                 Back to Home
             </Link>
