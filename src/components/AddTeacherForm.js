@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import UseTeachersContext from '../hooks/use-teachers-context';
+import { useNavigate } from 'react-router-dom';
 
 const AddTeacherForm = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [formError, setFormError] = useState(null);
-
   const { addTeacher, error } = UseTeachersContext()
+  
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -22,16 +24,19 @@ const AddTeacherForm = () => {
     }
 
     try {
-      const newTeacher = { name, email };
-      await addTeacher(newTeacher);
-    } catch (err) {
-      console.error(err);
+      await addTeacher({ name, email });
+      setName('');
+      setEmail('');
+      setFormError(null); // Reset form error if submission is successful
+      navigate('/'); // Navigate to the Home page
+  } catch (err) {
       setFormError(error || 'Failed to add teacher.');
-
-    }
-  };
+  }
+};
 
   return (
+    <div className='bg-gray-100 md:px-16 md:py-4 px-8 h-dvh'>
+
     <div className=" bg-sky-300 p-8">
       <div className="text-xl mb-4">
         Add New Teacher
@@ -56,6 +61,7 @@ const AddTeacherForm = () => {
 
         <button className="bg-green-700 mt-4 px-8 py-2 rounded text-white " type="submit">Add Teacher</button>
       </form>
+    </div>
     </div>
   );
 };

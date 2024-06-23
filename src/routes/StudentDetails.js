@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import AddAssignmentForm from './AddAssignmentForm';
+import AddAssignmentForm from '../components/AddAssignmentForm';
  import { faker } from '@faker-js/faker';
- import AssignmentList from './AssignmentList';
+ import AssignmentList from '../components/AssignmentList';
 
 const StudentDetails = () => {
     const { id } = useParams();

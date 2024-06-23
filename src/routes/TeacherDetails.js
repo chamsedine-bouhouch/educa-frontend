@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker';
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import StudentList from './StudentList';
-import AddStudentForm from './AddStudentForm';
+import { Link, useParams } from 'react-router-dom';
+import StudentList from '../components/StudentList';
+import AddStudentForm from '../components/AddStudentForm';
 import TeacherContext from '../context/teachers';
 
 const TeacherDetails = () => {
@@ -10,7 +10,7 @@ const TeacherDetails = () => {
     const { teacher, students, fetchTeacher, error } = useContext(TeacherContext);
     const [localError, setLocalError] = useState(null);
     const [loading, setLoading] = useState(true);
-
+    const [showAddStudentForm, setShowAddStudentForm] = useState(false)
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
@@ -21,11 +21,16 @@ const TeacherDetails = () => {
                 setLocalError('Failed to load teacher details.');
             } finally {
                 setLoading(false);
+
             }
         };
         fetchData();
     }, [id, fetchTeacher]);
-    
+
+    const handleAddStudent = () => {
+        setShowAddStudentForm(!showAddStudentForm)
+    };
+
     // handle loading & error
     if (loading) {
         return <div className='flex justify-center mt-4 text-xl'>Loading...</div>;
@@ -47,9 +52,22 @@ const TeacherDetails = () => {
                 <div className='text-2xl mb-2'>{teacher.name}</div>
                 <div> {teacher.email}</div>
             </div>
-            <AddStudentForm teacherId={teacher.id} />
+            {/* Button to trigger the form */}
+            <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
+                onClick={handleAddStudent}
+            >
+                {showAddStudentForm ? 'Hide Form' : 'Assign Student'}
+
+            </button>
+
+            {showAddStudentForm && <AddStudentForm teacherId={teacher.id} />}
             <div className='text-2xl mt-8 mb-4'>Students List</div>
             <StudentList students={students} />
+
+            <Link to="/" className="text-blue-500 hover:underline mt-4 block">
+                Back to Home
+            </Link>
         </div>
     );
 };
