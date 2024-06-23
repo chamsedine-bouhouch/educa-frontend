@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import StudentList from './StudentList';
 import AddStudentForm from './AddStudentForm';
@@ -7,11 +7,33 @@ import TeacherContext from '../context/teachers';
 
 const TeacherDetails = () => {
     const { id } = useParams();
-    const { teacher, students, fetchTeacher } = useContext(TeacherContext);
+    const { teacher, students, fetchTeacher, error } = useContext(TeacherContext);
+    const [localError, setLocalError] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetchTeacher(id)
-    }, [id]);
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                await fetchTeacher(id);
+                setLocalError(null);
+            } catch (err) {
+                setLocalError('Failed to load teacher details.');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, [id, fetchTeacher]);
+    
+    // handle loading & error
+    if (loading) {
+        return <div className='flex justify-center mt-4 text-xl'>Loading...</div>;
+    }
+
+    if (localError || error) {
+        return <div className='flex justify-center mt-4 text-xl text-red-500'>{localError || error}</div>;
+    }
 
     if (!teacher) {
         return <div className='flex justify-center mt-4 text-xl text-red-500'>Teacher not found</div>;
@@ -31,31 +53,5 @@ const TeacherDetails = () => {
         </div>
     );
 };
-
-// const fetchTeacher = async (id) => {
-//     // Placeholder for API call
-//     return {
-//         id: id,
-//         name: faker.person.fullName(),
-//         email: faker.internet.email(),
-//         image: faker.image.avatar(),
-//     };
-// };
-// const fetchStudentsByTeacher = async (teacherId) => {
-//     // Placeholder for API call
-//     return [
-//         { id: 1, name: 'Student 1', image: faker.image.avatar() },
-//         { id: 2, name: 'Student 2', image: faker.image.avatar() },
-//         { id: 3, name: 'Student 3', image: faker.image.avatar() },
-//         { id: 4, name: 'Student 4', image: faker.image.avatar() },
-//         { id: 5, name: 'Student 5', image: faker.image.avatar() },
-//         { id: 6, name: 'Student 6', image: faker.image.avatar() },
-//         { id: 7, name: 'Student 7', image: faker.image.avatar() },
-//         { id: 8, name: 'Student 8', image: faker.image.avatar() },
-//         { id: 9, name: 'Student 9', image: faker.image.avatar() },
-
-//     ];
-// };
-
 
 export default TeacherDetails;

@@ -19,12 +19,13 @@ const TeacherList = () => {
         };
         fetchData();
     }, [fetchTeachers]);
-
+    
+    // handle loading
     if (loading) return <div>Loading...</div>;
 
     return (
         <div>
-            {error && <p className="mb-2 text-red-500 ">{error}</p>}
+            {error && <p className="mb-2 text-red-500 text-sm">{error}</p>}
             <ul className='items-center rounded bg-white'>
                 {teachers.map((teacher) => (
                     <li className="flex items-center p-4 hover:bg-gray-200 border" key={teacher.id}>
