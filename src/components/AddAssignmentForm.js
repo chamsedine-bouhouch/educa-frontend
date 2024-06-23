@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 
-const AddStudentForm = ({ teacherId }) => {
+const AddAssignmentForm = ({ studentId }) => {
   const [name, setName] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
     // Call API to add a new Student
-    assignStudent({ name, teacherId }).then(() => {
+    assignStudent({ name, studentId }).then(() => {
       setName('');
     });
   };
@@ -14,7 +14,7 @@ const AddStudentForm = ({ teacherId }) => {
   return (
     <div className=" bg-sky-300 p-8">
       <div className="text-xl mb-4">
-        Add New Student
+        Add New Assignment
       </div>
       <form
         onSubmit={handleSubmit}>
@@ -27,7 +27,7 @@ const AddStudentForm = ({ teacherId }) => {
           required
         />
 
-        <button className="bg-green-700 mt-4 px-8 py-2 rounded text-white" type="submit">Add Student</button>
+        <button className="bg-green-700 mt-4 px-8 py-2 rounded text-white " type="submit">Add Student</button>
       </form>
     </div>
   );
@@ -38,4 +38,4 @@ const assignStudent = async (student) => {
   console.log('Adding student:', student);
 };
 
-export default AddStudentForm;
+export default AddAssignmentForm;
