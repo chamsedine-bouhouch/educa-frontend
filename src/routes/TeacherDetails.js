@@ -10,7 +10,9 @@ const TeacherDetails = () => {
     const { teacher, fetchTeacher, error } = useContext(TeacherContext);
     const [localError, setLocalError] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [showAddStudentForm, setShowAddStudentForm] = useState(false)
+    const [showAddStudentForm, setShowAddStudentForm] = useState(false);
+    const [avatarUrl, setAvatarUrl] = useState('');
+
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
@@ -21,14 +23,19 @@ const TeacherDetails = () => {
                 setLocalError('Failed to load teacher details.');
             } finally {
                 setLoading(false);
-
             }
         };
         fetchData();
     }, [id, fetchTeacher]);
 
+    useEffect(() => {
+        if (teacher) {
+            setAvatarUrl(faker.image.avatar());
+        }
+    }, [teacher]);
+
     const handleAddStudent = () => {
-        setShowAddStudentForm(!showAddStudentForm)
+        setShowAddStudentForm(!showAddStudentForm);
     };
 
     // handle loading & error
@@ -45,12 +52,12 @@ const TeacherDetails = () => {
     }
 
     return (
-        <div className='bg-gray-100 md:px-16 md:py-4 px-8 h-full'>
+        <div className='bg-gray-100 md:px-16 md:py-4 px-8 min-h-screen'>
             <div className='text-2xl mb-4'>Teacher Details</div>
             <div className='flex flex-col items-center justify-center mb-4'>
-                <img className="inline-block h-64 w-64 rounded-full ring-2 ring-white mb-4" src={faker.image.avatar()} alt={teacher.name} />
+                <img className="inline-block h-64 w-64 rounded-full ring-2 ring-white mb-4" src={avatarUrl} alt={teacher.name} />
                 <div className='text-2xl mb-2'>{teacher.name}</div>
-                <div> {teacher.email}</div>
+                <div>{teacher.email}</div>
             </div>
             {/* Button to trigger the form */}
             <button
@@ -58,7 +65,6 @@ const TeacherDetails = () => {
                 onClick={handleAddStudent}
             >
                 {showAddStudentForm ? 'Hide Form' : 'Assign Student'}
-
             </button>
 
             {showAddStudentForm && <AddStudentForm teacherId={teacher.id} />}

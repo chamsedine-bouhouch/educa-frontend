@@ -7,8 +7,9 @@ const TeacherProvider = ({ children }) => {
     const [teachers, setTeachers] = useState([]);
     const [teacher, setTeacher] = useState(null);
     const [student, setStudent] = useState(null);
+    const [assignment, setAssignment] = useState(null);
     const [error, setError] = useState(null);
-    //  fetch all
+    // teachers
     const fetchTeachers = useCallback(async () => {
         try {
             const res = await api.get('/teachers');
@@ -40,7 +41,7 @@ const TeacherProvider = ({ children }) => {
             throw err;
         }
     }, [fetchTeachers]);
-    // add student
+    //  students
     const assignStudent = useCallback(async (newStudent) => {
         try {
             await api.post('/students', newStudent);
@@ -61,7 +62,7 @@ const TeacherProvider = ({ children }) => {
         }
     }, []);
 
-    // add student
+    // Assignments
     const addAssignment = useCallback(async (newAssignment) => {
         try {
             await api.post('/assignments', newAssignment);
@@ -72,18 +73,43 @@ const TeacherProvider = ({ children }) => {
         }
     }, [fetchStudent]);
 
+    const fetchAssignment = useCallback(async (id) => {
+        try {
+            const res = await api.get(`/assignments/${id}`);
+            setAssignment(res.data);
+        } catch (err) {
+            setError('Failed to fetch assignment details.');
+            throw err;
+        }
+    }, []);
+    const updateAssignmentGrade = useCallback(async (id, newGrade) => {
+        try {
+            const res = await api.patch(`/assignments/${id}/grade`, {
+                status: newGrade
+            });
+            setAssignment(res.data);
+        } catch (err) {
+            setError('Failed to update assignment.');
+            throw err;
+        }
+    }, []);
+
+
 
     const store = {
         teacher,
         teachers,
         student,
+        assignment,
         error,
         fetchTeacher,
         fetchTeachers,
         addTeacher,
         assignStudent,
         fetchStudent,
-        addAssignment
+        addAssignment,
+        fetchAssignment,
+        updateAssignmentGrade
     };
 
     return (

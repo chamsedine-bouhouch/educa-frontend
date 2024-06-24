@@ -1,48 +1,68 @@
 // src/components/AssignmentDetails.js
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import UseTeachersContext from '../hooks/use-teachers-context';
 
 const AssignmentDetails = () => {
     const { id } = useParams();
-    const [assignment, setAssignment] = useState(null);
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(true);
+
+    const { assignment, fetchAssignment, updateAssignmentGrade } = UseTeachersContext();
 
     useEffect(() => {
-        // Fetch assignment details from the backend
-        fetchAssignment(id).then(setAssignment);
-    }, [id]);
+        const getAssignment = async () => {
+            try {
+                await fetchAssignment(id);
+            } catch (err) {
+                setError('Failed to fetch assignment.');
+            } finally {
+                setLoading(false);
+            }
+        };
+        getAssignment();
+    }, [id, fetchAssignment]);
 
-    const updateGrade = (newGrade) => {
-        // Update the assignment grade
-        // Assume updateAssignmentGrade is a function that updates the grade in the backend
-        updateAssignmentGrade(id, newGrade).then((updatedAssignment) =>
-            setAssignment(updatedAssignment)
-        );
+    const toggleGrade = async () => {
+        const newGrade = assignment.status === 'Pass' ? 'Fail' : 'Pass';
+        try {
+            await updateAssignmentGrade(id, newGrade);
+            setError('');
+        } catch (err) {
+            setError('Failed to update assignment grade.');
+        }
     };
 
-    if (!assignment) return <div>Loading...</div>;
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div className="text-red-500">{error}</div>;
 
+
+    if (!assignment) {
+        return <div className='flex justify-center mt-4 text-xl text-red-500'>Assignment not found</div>;
+    }
     return (
-        <div className='bg-gray-100 md:px-16 md:py-4 px-8 h-dvh'>
-            <div className='text-2xl mt-8 mb-4'>Assignment Details</div>
 
-            <div className='text-xl my-4 '>{assignment.title}</div>
-            <div className='mb-4 text-lg text-gray-600'>status : {assignment.grade}</div>
-        <div>
-        <button className="bg-green-700 mt-4 px-8 py-2 rounded text-white m-2" onClick={() => updateGrade('Pass')}>Pass</button>
-        <button className="bg-red-700 mt-4 px-8 py-2 rounded text-white" onClick={() => updateGrade('Fail')}>Fail</button>
-        </div>
+        <div className='min-h-screen bg-gray-100 md:px-16 md:py-4 px-8 '>
+            <div className='text-2xl mt-8 mb-4'>Assignment Details</div>
+            <div className='flex flex-col items-center justify-center' >
+                <div className='text-xl my-4 '>{assignment.title}</div>
+                <div className='mb-4 text-lg text-gray-600'>
+                    Status: {assignment.status === 'Pass' ? 'Pass' : 'Fail'}
+                </div>
+                <div>
+                    <button
+                        className={`mt-4 px-8 py-2 rounded text-white ${assignment.status === 'Pass' ? 'bg-red-700' : 'bg-green-700'}`}
+                        onClick={toggleGrade}
+                    >
+                        {assignment.status === 'Pass' ? 'Fail' : 'Pass'}
+                    </button>
+                </div>
+            </div>
+            <Link to="/" className="text-blue-500 hover:underline mt-4 block">
+                Back to Home
+            </Link>
         </div>
     );
-};
-
-const fetchAssignment = async (id) => {
-    // Placeholder for API call
-    return { id, title: 'Assignment Title', description: 'Assignment Description', grade: 'Pending' };
-};
-
-const updateAssignmentGrade = async (id, newGrade) => {
-    // Placeholder for API call
-    return { id, title: 'Assignment Title', dueDate: "2024-06-24", grade: newGrade };
 };
 
 export default AssignmentDetails;
