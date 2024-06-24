@@ -4,11 +4,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { TeacherProvider } from './context/teachers';
 import Spinner from './components/Spinner';
 
-const Home = lazy(() => import('./routes/Home'));
-const TeacherDetails = lazy(() => import('./routes/TeacherDetails'));
-const AddTeacherForm = lazy(() => import('./components/AddTeacherForm'));
-const StudentDetails = lazy(() => import('./routes/StudentDetails'));
-const AssignmentDetails = lazy(() => import('./routes/AssignmentDetails'));
+const Home = lazy(() => import('./pages/Home'));
+const TeacherDetails = lazy(() => import('./pages/TeacherDetails'));
+const AddTeacherForm = lazy(() => import('./pages/AddTeacherForm'));
+const StudentDetails = lazy(() => import('./pages/StudentDetails'));
+const AssignmentDetails = lazy(() => import('./pages/AssignmentDetails'));
 
 const App = () => (
   <Router>
