@@ -3,6 +3,7 @@ import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { TeacherProvider } from './context/TeacherContext';
 import Spinner from './components/Spinner';
+import NotFound from './pages/NotFound';
 
 const Home = lazy(() => import('./pages/Home'));
 const TeacherDetails = lazy(() => import('./pages/TeacherDetails'));
@@ -15,11 +16,12 @@ const App = () => (
     <TeacherProvider>
       <Suspense fallback={<Spinner />}>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/teachers/:id" element={<TeacherDetails />} />
-          <Route path="/add-teacher" element={<AddTeacherForm />} />
-          <Route path="/students/:id" element={<StudentDetails />} />
-          <Route path="/assignments/:id" element={<AssignmentDetails />} />
+          <Route exact path="/" element={<Home />} />
+          <Route exact path="/teachers/:id" element={<TeacherDetails />} />
+          <Route exact path="/add-teacher" element={<AddTeacherForm />} />
+          <Route exact path="/students/:id" element={<StudentDetails />} />
+          <Route exact path="/assignments/:id" element={<AssignmentDetails />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
     </TeacherProvider>

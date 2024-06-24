@@ -33,8 +33,8 @@ const AssignmentDetails = () => {
         }
     };
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div className="text-red-500">{error}</div>;
+    if (loading) return <div className='flex justify-center mt-4 text-xl'>Loading...</div>;
+    if (error) return <div className="flex justify-center mt-4 text-xl text-red-500">{error}</div>;
 
 
     if (!assignment) {
