@@ -1,7 +1,7 @@
 
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { TeacherProvider } from './context/teachers';
+import { TeacherProvider } from './context/TeacherContext';
 import Spinner from './components/Spinner';
 
 const Home = lazy(() => import('./pages/Home'));

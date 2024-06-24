@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import StudentList from '../components/StudentList';
 import AddStudentForm from '../components/AddStudentForm';
-import TeacherContext from '../context/teachers';
+import TeacherContext from '../context/TeacherContext';
 
 const TeacherDetails = () => {
     const { id } = useParams();
